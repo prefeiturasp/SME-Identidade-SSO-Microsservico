@@ -5,7 +5,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY", "django-inseguro-apenas-desenvolvimento"
+)
 API_KEY = os.getenv("API_KEY", "dev-key-default")
 API_KEY_HEADER = os.getenv("API_KEY_HEADER", "X-API-Key")
 DEBUG = os.getenv("DJANGO_DEBUG", "1") == "1"
