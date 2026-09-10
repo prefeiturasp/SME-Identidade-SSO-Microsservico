@@ -4,7 +4,7 @@ RUN          = $(COMPOSE) run --rm identidade_sso
 PYTEST_ARGS ?= --cov=apps --cov-report=term-missing --cov-fail-under=80
 
 .PHONY: run build stop \
-        test test-core \
+        test test-core test-cache test-autenticacao test-gateway-ms test-sessoes test-login \
         lint coverage schema docs docs-clean help
 
 help:
@@ -19,7 +19,12 @@ help:
 	@echo "    make test             — todos os apps com cobertura ≥80%"
 	@echo ""
 	@echo "  Testes por app:"
-	@echo "    make test-core        — apenas apps.core"
+	@echo "    make test-core          — apenas apps.core"
+	@echo "    make test-cache         — apenas apps.cache"
+	@echo "    make test-autenticacao  — apenas apps.autenticacao"
+	@echo "    make test-gateway-ms    — apenas apps.gateway_ms"
+	@echo "    make test-sessoes       — apenas apps.sessoes"
+	@echo "    make test-login         — apenas apps.login"
 	@echo ""
 	@echo "  Qualidade:"
 	@echo "    make lint             — ruff + black + isort + mypy"
@@ -52,8 +57,28 @@ test:
 # ---------------------------------------------------------------------------
 
 test-core:
-	$(RUN) python -m pytest apps/core/tests/ \
+	$(RUN) python -m pytest apps/core/testes/ \
 		--cov=apps.core --cov-report=term-missing -v
+
+test-cache:
+	$(RUN) python -m pytest apps/cache/testes/ \
+		--cov=apps.cache --cov-report=term-missing -v
+
+test-autenticacao:
+	$(RUN) python -m pytest apps/autenticacao/testes/ \
+		--cov=apps.autenticacao --cov-report=term-missing -v
+
+test-gateway-ms:
+	$(RUN) python -m pytest apps/gateway_ms/testes/ \
+		--cov=apps.gateway_ms --cov-report=term-missing -v
+
+test-sessoes:
+	$(RUN) python -m pytest apps/sessoes/testes/ \
+		--cov=apps.sessoes --cov-report=term-missing -v
+
+test-login:
+	$(RUN) python -m pytest apps/login/testes/ \
+		--cov=apps.login --cov-report=term-missing -v
 
 # ---------------------------------------------------------------------------
 # Qualidade

@@ -9,7 +9,24 @@ services:
     env_file:
       - .env
 
+    depends_on:
+      keydb:
+        condition: service_healthy
+
     command: python manage.py runserver 0.0.0.0:${PORT_WEB:-8002}
     ports:
       - "${PORT_WEB:-8002}:${PORT_WEB:-8002}"
     restart: unless-stopped
+
+  keydb:
+    image: eqalpha/keydb:latest
+    container_name: identidade_sso_keydb
+
+    ports:
+      - "6382:6379"
+
+    healthcheck:
+      test: ["CMD", "keydb-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
