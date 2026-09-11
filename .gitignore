@@ -17,3 +17,9 @@ build/
 .DS_Store
 staticfiles
 docs/_build
+
+# SonarQube (configuração local de ambiente, não deve ser versionada)
+.scannerwork/
+coverage.xml
+sonar-project.properties
+pytest-report.xml
