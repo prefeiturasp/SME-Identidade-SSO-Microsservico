@@ -19,9 +19,7 @@ class TestSessao(SimpleTestCase):
             kc_user_id="5c29cc47-0000-0000-0000-000000000000",
             sistemas=[{"sistema_id": 1, "sistema_nome": "CoreSSO"}],
             criado_em=datetime(2026, 9, 8, 10, 0, 0, tzinfo=UTC),
-            ultima_atividade=datetime(
-                2026, 9, 8, 10, 0, 0, tzinfo=UTC
-            ),
+            ultima_atividade=datetime(2026, 9, 8, 10, 0, 0, tzinfo=UTC),
             expira_em=datetime(2026, 9, 8, 18, 0, 0, tzinfo=UTC),
         )
 
