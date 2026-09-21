@@ -70,8 +70,6 @@ class Sessao:
             kc_user_id=dados["kc_user_id"],
             sistemas=dados["sistemas"],
             criado_em=datetime.fromisoformat(dados["criado_em"]),
-            ultima_atividade=datetime.fromisoformat(
-                dados["ultima_atividade"]
-            ),
+            ultima_atividade=datetime.fromisoformat(dados["ultima_atividade"]),
             expira_em=datetime.fromisoformat(dados["expira_em"]),
         )
