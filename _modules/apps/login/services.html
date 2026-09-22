@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>apps.login.services &mdash; SME-Identidade-SSO-Microsservico</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2346ddef"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SME-Identidade-SSO-Microsservico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../sessoes.html">Sessão compartilhada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../arquitetura/visao_geral.html">Visão geral</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../arquitetura/fluxo_logout_global.html">Fluxo de logout global</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Referência de código</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SME-Identidade-SSO-Microsservico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">apps.login.services</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para apps.login.services</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Serviço de login orquestrado: autenticação + sessão compartilhada."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">apps.gateway_ms.cliente</span><span class="w"> </span><span class="kn">import</span> <span class="n">cliente_gateway_ms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apps.sessoes.dominio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sessao</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apps.sessoes.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">GatewayIndisponivelError</span><span class="p">,</span> <span class="n">SessaoService</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LoginError">
+<a class="viewcode-back" href="../../../api.html#apps.login.services.LoginError">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LoginError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Login ou senha inválidos.</span>
+
+<span class="sd">    Levantada tanto para senha incorreta quanto para usuário</span>
+<span class="sd">    inexistente no Keycloak — o SSO-MS trata os dois casos da mesma</span>
+<span class="sd">    forma para não permitir que um consumidor descubra quais logins</span>
+<span class="sd">    existem testando senhas em branco.</span>
+<span class="sd">    """</span></div>
+
+
+
+<div class="viewcode-block" id="ResultadoLogin">
+<a class="viewcode-back" href="../../../api.html#apps.login.services.ResultadoLogin">[documentos]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ResultadoLogin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Resultado do login orquestrado.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        dados_autenticacao: Dados retornados pelo Gateway (tokens,</span>
+<span class="sd">            dados cadastrais, roles).</span>
+<span class="sd">        sessao: A sessão compartilhada criada, ou ``None`` se a</span>
+<span class="sd">            criação falhou por indisponibilidade do Gateway.</span>
+<span class="sd">        sessao_erro: Motivo da falha na criação da sessão, quando</span>
+<span class="sd">            ``sessao`` é ``None``.</span>
+<span class="sd">    """</span>
+
+    <span class="n">dados_autenticacao</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">sessao</span><span class="p">:</span> <span class="n">Sessao</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">sessao_erro</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="LoginService">
+<a class="viewcode-back" href="../../../api.html#apps.login.services.LoginService">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LoginService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Autentica um usuário e cria sua sessão compartilhada."""</span>
+
+<div class="viewcode-block" id="LoginService.autenticar_e_criar_sessao">
+<a class="viewcode-back" href="../../../api.html#apps.login.services.LoginService.autenticar_e_criar_sessao">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">autenticar_e_criar_sessao</span><span class="p">(</span><span class="n">login</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">senha</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResultadoLogin</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Autentica no Gateway e cria a sessão compartilhada.</span>
+
+<span class="sd">        A autenticação real acontece no Keycloak, via Gateway. Se ela</span>
+<span class="sd">        for bem-sucedida mas a criação da sessão falhar por</span>
+<span class="sd">        indisponibilidade do Gateway (segunda chamada, para obter os</span>
+<span class="sd">        sistemas do usuário), o login não é desfeito — a sessão</span>
+<span class="sd">        apenas fica ausente na resposta.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            login: RF, CPF ou username do usuário.</span>
+<span class="sd">            senha: Senha em texto plano.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dados de autenticação e a sessão criada (ou o motivo da</span>
+<span class="sd">            falha, se a sessão não pôde ser criada).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            LoginError: Login ou senha inválidos.</span>
+<span class="sd">            GatewayIndisponivelError: O Gateway não respondeu a tempo</span>
+<span class="sd">                ou está inacessível na chamada de autenticação.</span>
+<span class="sd">        """</span>
+        <span class="n">dados_autenticacao</span> <span class="o">=</span> <span class="n">LoginService</span><span class="o">.</span><span class="n">_autenticar_no_gateway</span><span class="p">(</span>
+            <span class="n">login</span><span class="p">,</span>
+            <span class="n">senha</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sessao</span> <span class="o">=</span> <span class="n">SessaoService</span><span class="o">.</span><span class="n">criar</span><span class="p">(</span>
+                <span class="n">login</span><span class="p">,</span>
+                <span class="n">dados_autenticacao</span><span class="p">[</span><span class="s2">"kc_user_id"</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="n">sessao_erro</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="n">GatewayIndisponivelError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">sessao</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">sessao_erro</span> <span class="o">=</span> <span class="s2">"Gateway indisponível ao criar sessão."</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">"Login de </span><span class="si">%s</span><span class="s2"> OK, mas sessão não foi criada: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">login</span><span class="p">,</span>
+                <span class="n">exc</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ResultadoLogin</span><span class="p">(</span>
+            <span class="n">dados_autenticacao</span><span class="o">=</span><span class="n">dados_autenticacao</span><span class="p">,</span>
+            <span class="n">sessao</span><span class="o">=</span><span class="n">sessao</span><span class="p">,</span>
+            <span class="n">sessao_erro</span><span class="o">=</span><span class="n">sessao_erro</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_autenticar_no_gateway</span><span class="p">(</span><span class="n">login</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">senha</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Autentica o usuário no Gateway.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            login: RF, CPF ou username do usuário.</span>
+<span class="sd">            senha: Senha em texto plano.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Corpo da resposta do Gateway (tokens, dados cadastrais).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            LoginError: Login ou senha inválidos.</span>
+<span class="sd">            GatewayIndisponivelError: O Gateway não respondeu a tempo</span>
+<span class="sd">                ou está inacessível.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">cliente_gateway_ms</span><span class="p">()</span> <span class="k">as</span> <span class="n">cliente</span><span class="p">:</span>
+                <span class="n">resposta</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                    <span class="s2">"/api/v1/autenticacao/login/"</span><span class="p">,</span>
+                    <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"login"</span><span class="p">:</span> <span class="n">login</span><span class="p">,</span> <span class="s2">"senha"</span><span class="p">:</span> <span class="n">senha</span><span class="p">},</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="n">httpx</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">"Falha ao autenticar </span><span class="si">%s</span><span class="s2"> no Gateway: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">login</span><span class="p">,</span>
+                <span class="n">exc</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">GatewayIndisponivelError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+        <span class="k">if</span> <span class="n">resposta</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LoginError</span><span class="p">(</span><span class="s2">"Senha inválida."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">resposta</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">204</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LoginError</span><span class="p">(</span><span class="s2">"Usuário não encontrado."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">resposta</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GatewayIndisponivelError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Gateway retornou status </span><span class="si">{</span><span class="n">resposta</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">."</span>
+            <span class="p">)</span>
+
+        <span class="n">corpo</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">resposta</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">corpo</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais .</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

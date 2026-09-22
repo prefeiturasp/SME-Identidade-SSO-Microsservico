@@ -1,0 +1,1371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referência de código &mdash; SME-Identidade-SSO-Microsservico</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2346ddef"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="prev" title="Fluxo de logout global" href="arquitetura/fluxo_logout_global.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SME-Identidade-SSO-Microsservico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sessoes.html">Sessão compartilhada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arquitetura/visao_geral.html">Visão geral</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arquitetura/fluxo_logout_global.html">Fluxo de logout global</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Referência de código</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-apps.core.api.views">Core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apps.core.api.views.HealthCheckView"><code class="docutils literal notranslate"><span class="pre">HealthCheckView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.core.api.views.HealthCheckView.authentication_classes"><code class="docutils literal notranslate"><span class="pre">HealthCheckView.authentication_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.core.api.views.HealthCheckView.permission_classes"><code class="docutils literal notranslate"><span class="pre">HealthCheckView.permission_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.core.api.views.HealthCheckView.get"><code class="docutils literal notranslate"><span class="pre">HealthCheckView.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.core.api.views.HealthCheckView.schema"><code class="docutils literal notranslate"><span class="pre">HealthCheckView.schema</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.core.api.serializers.HealthStatusSerializer"><code class="docutils literal notranslate"><span class="pre">HealthStatusSerializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.core.api.serializers.HealthStatusSerializer.status"><code class="docutils literal notranslate"><span class="pre">HealthStatusSerializer.status</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apps.autenticacao.api.autenticacao">Autenticação</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apps.autenticacao.api.autenticacao.AutenticacaoApiKey"><code class="docutils literal notranslate"><span class="pre">AutenticacaoApiKey</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.autenticacao.api.autenticacao.AutenticacaoApiKey.authenticate"><code class="docutils literal notranslate"><span class="pre">AutenticacaoApiKey.authenticate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.autenticacao.api.autenticacao.AutenticacaoApiKey.authenticate_header"><code class="docutils literal notranslate"><span class="pre">AutenticacaoApiKey.authenticate_header()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apps.cache.chaves">Cache</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apps.cache.chaves.sessao"><code class="docutils literal notranslate"><span class="pre">sessao()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.cache.services.CacheService"><code class="docutils literal notranslate"><span class="pre">CacheService</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.cache.services.CacheService.obter"><code class="docutils literal notranslate"><span class="pre">CacheService.obter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.cache.services.CacheService.salvar"><code class="docutils literal notranslate"><span class="pre">CacheService.salvar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.cache.services.CacheService.invalidar"><code class="docutils literal notranslate"><span class="pre">CacheService.invalidar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.cache.services.CacheService.disponivel"><code class="docutils literal notranslate"><span class="pre">CacheService.disponivel()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apps.gateway_ms.cliente">Gateway-MS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apps.gateway_ms.cliente.cliente_gateway_ms"><code class="docutils literal notranslate"><span class="pre">cliente_gateway_ms()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apps.sessoes.dominio">Sessões</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.dominio.Sessao"><code class="docutils literal notranslate"><span class="pre">Sessao</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.sessao_id"><code class="docutils literal notranslate"><span class="pre">Sessao.sessao_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.login"><code class="docutils literal notranslate"><span class="pre">Sessao.login</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.kc_user_id"><code class="docutils literal notranslate"><span class="pre">Sessao.kc_user_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.sistemas"><code class="docutils literal notranslate"><span class="pre">Sessao.sistemas</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.criado_em"><code class="docutils literal notranslate"><span class="pre">Sessao.criado_em</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.ultima_atividade"><code class="docutils literal notranslate"><span class="pre">Sessao.ultima_atividade</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.expira_em"><code class="docutils literal notranslate"><span class="pre">Sessao.expira_em</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Sessao.sessao_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Sessao.login</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Sessao.kc_user_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Sessao.criado_em</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Sessao.ultima_atividade</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Sessao.expira_em</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">Sessao.sistemas</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.to_dict"><code class="docutils literal notranslate"><span class="pre">Sessao.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.dominio.Sessao.from_dict"><code class="docutils literal notranslate"><span class="pre">Sessao.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.services.GatewayIndisponivelError"><code class="docutils literal notranslate"><span class="pre">GatewayIndisponivelError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.services.ResultadoValidacao"><code class="docutils literal notranslate"><span class="pre">ResultadoValidacao</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.ResultadoValidacao.situacao"><code class="docutils literal notranslate"><span class="pre">ResultadoValidacao.situacao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.ResultadoValidacao.sessao"><code class="docutils literal notranslate"><span class="pre">ResultadoValidacao.sessao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.ResultadoValidacao.cache_disponivel"><code class="docutils literal notranslate"><span class="pre">ResultadoValidacao.cache_disponivel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">ResultadoValidacao.situacao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">ResultadoValidacao.sessao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">ResultadoValidacao.cache_disponivel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.services.SessaoService"><code class="docutils literal notranslate"><span class="pre">SessaoService</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.SessaoService.criar"><code class="docutils literal notranslate"><span class="pre">SessaoService.criar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.SessaoService.obter"><code class="docutils literal notranslate"><span class="pre">SessaoService.obter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.SessaoService.validar"><code class="docutils literal notranslate"><span class="pre">SessaoService.validar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.SessaoService.renovar"><code class="docutils literal notranslate"><span class="pre">SessaoService.renovar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.services.SessaoService.encerrar"><code class="docutils literal notranslate"><span class="pre">SessaoService.encerrar()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.logout_global.ResultadoNotificacao"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.logout_global.ResultadoNotificacao.sistema_id"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.sistema_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.logout_global.ResultadoNotificacao.sistema_nome"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.sistema_nome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.logout_global.ResultadoNotificacao.sucesso"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.sucesso</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.logout_global.ResultadoNotificacao.detalhe"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.detalhe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.sistema_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.sistema_nome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.sucesso</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">ResultadoNotificacao.detalhe</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.logout_global.notificar_logout_global"><code class="docutils literal notranslate"><span class="pre">notificar_logout_global()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.views.CriarSessaoView"><code class="docutils literal notranslate"><span class="pre">CriarSessaoView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.api.views.CriarSessaoView.post"><code class="docutils literal notranslate"><span class="pre">CriarSessaoView.post()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.views.ConsultarSessaoView"><code class="docutils literal notranslate"><span class="pre">ConsultarSessaoView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.api.views.ConsultarSessaoView.get"><code class="docutils literal notranslate"><span class="pre">ConsultarSessaoView.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.views.RenovarSessaoView"><code class="docutils literal notranslate"><span class="pre">RenovarSessaoView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.api.views.RenovarSessaoView.post"><code class="docutils literal notranslate"><span class="pre">RenovarSessaoView.post()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.views.LogoutSessaoView"><code class="docutils literal notranslate"><span class="pre">LogoutSessaoView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.sessoes.api.views.LogoutSessaoView.post"><code class="docutils literal notranslate"><span class="pre">LogoutSessaoView.post()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.serializers.CriarSessaoRequestSerializer"><code class="docutils literal notranslate"><span class="pre">CriarSessaoRequestSerializer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.serializers.SistemaSerializer"><code class="docutils literal notranslate"><span class="pre">SistemaSerializer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.serializers.SessaoResponseSerializer"><code class="docutils literal notranslate"><span class="pre">SessaoResponseSerializer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.serializers.ValidarSessaoResponseSerializer"><code class="docutils literal notranslate"><span class="pre">ValidarSessaoResponseSerializer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.serializers.NotificacaoLogoutSerializer"><code class="docutils literal notranslate"><span class="pre">NotificacaoLogoutSerializer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.sessoes.api.serializers.LogoutResponseSerializer"><code class="docutils literal notranslate"><span class="pre">LogoutResponseSerializer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apps.login.services">Login</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#apps.login.services.LoginError"><code class="docutils literal notranslate"><span class="pre">LoginError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.login.services.ResultadoLogin"><code class="docutils literal notranslate"><span class="pre">ResultadoLogin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.login.services.ResultadoLogin.dados_autenticacao"><code class="docutils literal notranslate"><span class="pre">ResultadoLogin.dados_autenticacao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.login.services.ResultadoLogin.sessao"><code class="docutils literal notranslate"><span class="pre">ResultadoLogin.sessao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.login.services.ResultadoLogin.sessao_erro"><code class="docutils literal notranslate"><span class="pre">ResultadoLogin.sessao_erro</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">ResultadoLogin.dados_autenticacao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">ResultadoLogin.sessao</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">ResultadoLogin.sessao_erro</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.login.services.LoginService"><code class="docutils literal notranslate"><span class="pre">LoginService</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.login.services.LoginService.autenticar_e_criar_sessao"><code class="docutils literal notranslate"><span class="pre">LoginService.autenticar_e_criar_sessao()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.login.api.views.LoginView"><code class="docutils literal notranslate"><span class="pre">LoginView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.login.api.views.LoginView.post"><code class="docutils literal notranslate"><span class="pre">LoginView.post()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.login.api.serializers.LoginRequestSerializer"><code class="docutils literal notranslate"><span class="pre">LoginRequestSerializer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.login.api.serializers.LoginResponseSerializer"><code class="docutils literal notranslate"><span class="pre">LoginResponseSerializer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SME-Identidade-SSO-Microsservico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Referência de código</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="referencia-de-codigo">
+<h1>Referência de código<a class="headerlink" href="#referencia-de-codigo" title="Link para este cabeçalho"></a></h1>
+<p>Esta página publica as docstrings dos principais módulos do projeto. Detalhes
+de endpoints, status HTTP e contratos externos devem permanecer no OpenAPI ou
+em páginas técnicas específicas.</p>
+<section id="module-apps.core.api.views">
+<span id="core"></span><h2>Core<a class="headerlink" href="#module-apps.core.api.views" title="Link para este cabeçalho"></a></h2>
+<p>Views da API da aplicação core.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.core.api.views.HealthCheckView">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.core.api.views.</span></span><span class="sig-name descname"><span class="pre">HealthCheckView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/core/api/views.html#HealthCheckView"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.core.api.views.HealthCheckView" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Disponibiliza o endpoint de verificação de saúde da aplicação.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.core.api.views.HealthCheckView.authentication_classes">
+<span class="sig-name descname"><span class="pre">authentication_classes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#apps.core.api.views.HealthCheckView.authentication_classes" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.core.api.views.HealthCheckView.permission_classes">
+<span class="sig-name descname"><span class="pre">permission_classes</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;class</span> <span class="pre">'rest_framework.permissions.AllowAny'&gt;]</span></em><a class="headerlink" href="#apps.core.api.views.HealthCheckView.permission_classes" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.core.api.views.HealthCheckView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/core/api/views.html#HealthCheckView.get"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.core.api.views.HealthCheckView.get" title="Link para esta definição"></a></dt>
+<dd><p>Retorna o estado de saúde da aplicação.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – Requisição HTTP recebida.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Resposta HTTP contendo o status da aplicação.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>Request</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Response</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.core.api.views.HealthCheckView.schema">
+<span class="sig-name descname"><span class="pre">schema</span></span><a class="headerlink" href="#apps.core.api.views.HealthCheckView.schema" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p id="module-apps.core.api.serializers">Serializers base para todos os apps do core.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.core.api.serializers.HealthStatusSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.core.api.serializers.</span></span><span class="sig-name descname"><span class="pre">HealthStatusSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/core/api/serializers.html#HealthStatusSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.core.api.serializers.HealthStatusSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Serializa o resultado da verificação de saúde da aplicação.</p>
+<p>Este serializer é utilizado pelo endpoint de health check para
+informar o estado atual da aplicação e de suas dependências.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.core.api.serializers.HealthStatusSerializer.status">
+<span class="sig-name descname"><span class="pre">status</span></span><a class="headerlink" href="#apps.core.api.serializers.HealthStatusSerializer.status" title="Link para esta definição"></a></dt>
+<dd><p>Estado geral da aplicação. Pode assumir os valores
+<code class="docutils literal notranslate"><span class="pre">healthy</span></code>, <code class="docutils literal notranslate"><span class="pre">degraded</span></code> ou <code class="docutils literal notranslate"><span class="pre">unhealthy</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-apps.core.api.urls">Configuração de rotas da API da aplicação core.</p>
+</section>
+<section id="module-apps.autenticacao.api.autenticacao">
+<span id="autenticacao"></span><h2>Autenticação<a class="headerlink" href="#module-apps.autenticacao.api.autenticacao" title="Link para este cabeçalho"></a></h2>
+<p>Autenticação por API Key para os endpoints do SME-Identidade-SSO.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.autenticacao.api.autenticacao.AutenticacaoApiKey">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.autenticacao.api.autenticacao.</span></span><span class="sig-name descname"><span class="pre">AutenticacaoApiKey</span></span><a class="reference internal" href="_modules/apps/autenticacao/api/autenticacao.html#AutenticacaoApiKey"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.autenticacao.api.autenticacao.AutenticacaoApiKey" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAuthentication</span></code></p>
+<p>Autentica requisições via API Key no header configurado.</p>
+<p>A chave é comparada com <code class="docutils literal notranslate"><span class="pre">settings.API_KEY</span></code>.
+O header utilizado é definido por <code class="docutils literal notranslate"><span class="pre">settings.API_KEY_HEADER</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.autenticacao.api.autenticacao.AutenticacaoApiKey.authenticate">
+<span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/autenticacao/api/autenticacao.html#AutenticacaoApiKey.authenticate"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.autenticacao.api.autenticacao.AutenticacaoApiKey.authenticate" title="Link para esta definição"></a></dt>
+<dd><p>Valida o API Key presente no header da requisição.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – Requisição HTTP recebida.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (usuário, None) se autenticado, None se header ausente.</p>
+</dd>
+<dt class="field-odd">Levanta<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AuthenticationFailed</strong> – Se o API Key for inválido.</p>
+</dd>
+<dt class="field-even">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>request</strong> (<em>Request</em>)</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[<em>_UsuarioApiKey</em>, None] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.autenticacao.api.autenticacao.AutenticacaoApiKey.authenticate_header">
+<span class="sig-name descname"><span class="pre">authenticate_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/autenticacao/api/autenticacao.html#AutenticacaoApiKey.authenticate_header"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.autenticacao.api.autenticacao.AutenticacaoApiKey.authenticate_header" title="Link para esta definição"></a></dt>
+<dd><p>Retorna o nome do header de autenticação esperado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>Request</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-apps.cache.chaves">
+<span id="cache"></span><h2>Cache<a class="headerlink" href="#module-apps.cache.chaves" title="Link para este cabeçalho"></a></h2>
+<p>Funções para geração das chaves utilizadas no cache.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="apps.cache.chaves.sessao">
+<span class="sig-prename descclassname"><span class="pre">apps.cache.chaves.</span></span><span class="sig-name descname"><span class="pre">sessao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/cache/chaves.html#sessao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.cache.chaves.sessao" title="Link para esta definição"></a></dt>
+<dd><p>Retorna a chave de cache de uma sessão compartilhada.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> – Identificador único da sessão.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Chave utilizada para armazenar a sessão em cache.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> (<em>UUID</em><em> | </em><em>str</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-apps.cache.services">Serviços responsáveis pelas operações de cache.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.cache.services.CacheService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.cache.services.</span></span><span class="sig-name descname"><span class="pre">CacheService</span></span><a class="reference internal" href="_modules/apps/cache/services.html#CacheService"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.cache.services.CacheService" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Serviço responsável pelas operações de cache.</p>
+<p>O KeyDB é a única fonte de verdade da sessão compartilhada — não
+há fallback a um banco relacional, diferente do uso de cache do
+SME-Identidade-Token-Microsservico. Por isso, além das operações
+usuais (fail-safe, nunca propagam exceção), este serviço também
+expõe <a class="reference internal" href="#apps.cache.services.CacheService.disponivel" title="apps.cache.services.CacheService.disponivel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">disponivel()</span></code></a>, usado para distinguir “sessão não
+existe” de “cache indisponível” quando <a class="reference internal" href="#apps.cache.services.CacheService.obter" title="apps.cache.services.CacheService.obter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">obter()</span></code></a> retorna
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.cache.services.CacheService.obter">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chave</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/cache/services.html#CacheService.obter"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.cache.services.CacheService.obter" title="Link para esta definição"></a></dt>
+<dd><p>Obtém um valor armazenado em cache.</p>
+<p>Caso o serviço de cache esteja indisponível, retorna <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+permitindo que a aplicação continue normalmente.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>chave</strong> – Chave utilizada para localizar o valor em cache.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Valor armazenado ou <code class="docutils literal notranslate"><span class="pre">None</span></code> caso não exista ou ocorra alguma
+falha durante a consulta.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>chave</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>object | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.cache.services.CacheService.salvar">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">salvar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chave</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/cache/services.html#CacheService.salvar"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.cache.services.CacheService.salvar" title="Link para esta definição"></a></dt>
+<dd><p>Armazena um valor em cache.</p>
+<p>Caso o cache esteja indisponível, registra a ocorrência em log sem
+interromper o fluxo da aplicação.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chave</strong> – Chave utilizada para armazenamento.</p></li>
+<li><p><strong>valor</strong> – Valor que será armazenado.</p></li>
+<li><p><strong>timeout</strong> – Tempo de expiração em segundos. Quando omitido,
+usa o padrão configurado em <code class="docutils literal notranslate"><span class="pre">CACHES</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chave</strong> (<em>str</em>)</p></li>
+<li><p><strong>valor</strong> (<em>object</em>)</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.cache.services.CacheService.invalidar">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">invalidar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chave</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/cache/services.html#CacheService.invalidar"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.cache.services.CacheService.invalidar" title="Link para esta definição"></a></dt>
+<dd><p>Remove um valor armazenado em cache.</p>
+<p>Caso o cache esteja indisponível, registra a ocorrência em log sem
+interromper o fluxo da aplicação.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>chave</strong> – Chave do registro que será removido.</p>
+</dd>
+<dt class="field-even">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>chave</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.cache.services.CacheService.disponivel">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disponivel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/cache/services.html#CacheService.disponivel"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.cache.services.CacheService.disponivel" title="Link para esta definição"></a></dt>
+<dd><p>Verifica se o cache está respondendo.</p>
+<p>Faz um round-trip trivial de escrita e leitura. Usado quando
+<a class="reference internal" href="#apps.cache.services.CacheService.obter" title="apps.cache.services.CacheService.obter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">obter()</span></code></a> retorna <code class="docutils literal notranslate"><span class="pre">None</span></code> e é preciso saber se isso
+significa “chave não existe” ou “cache fora do ar” — distinção
+que importa porque aqui o cache é a única fonte de verdade da
+sessão, sem fallback a um banco relacional.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> se o cache respondeu com sucesso, <code class="docutils literal notranslate"><span class="pre">False</span></code> caso
+contrário.</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-apps.gateway_ms.cliente">
+<span id="gateway-ms"></span><h2>Gateway-MS<a class="headerlink" href="#module-apps.gateway_ms.cliente" title="Link para este cabeçalho"></a></h2>
+<p>Cliente HTTP do SME-Identidade-Gateway-Microsservico.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="apps.gateway_ms.cliente.cliente_gateway_ms">
+<span class="sig-prename descclassname"><span class="pre">apps.gateway_ms.cliente.</span></span><span class="sig-name descname"><span class="pre">cliente_gateway_ms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/gateway_ms/cliente.html#cliente_gateway_ms"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.gateway_ms.cliente.cliente_gateway_ms" title="Link para esta definição"></a></dt>
+<dd><p>Cria um cliente HTTP configurado para o Gateway.</p>
+<p>Uso: <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">cliente_gateway_ms()</span> <span class="pre">as</span> <span class="pre">cliente:</span> <span class="pre">cliente.get(...)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Cliente HTTP com URL base, timeout e API Key do Gateway já
+configurados.</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Client</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-apps.sessoes.dominio">
+<span id="sessoes"></span><h2>Sessões<a class="headerlink" href="#module-apps.sessoes.dominio" title="Link para este cabeçalho"></a></h2>
+<p>Modelo de domínio da sessão compartilhada.</p>
+<p>A sessão não é persistida em banco relacional — vive inteiramente no
+KeyDB, com TTL natural (ver <code class="docutils literal notranslate"><span class="pre">apps.sessoes.services.SessaoService</span></code>).
+Este módulo define apenas a estrutura de dados e sua serialização
+para/de JSON, sem lógica de negócio.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.dominio.</span></span><span class="sig-name descname"><span class="pre">Sessao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kc_user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criado_em</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ultima_atividade</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expira_em</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sistemas=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/dominio.html#Sessao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.dominio.Sessao" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Sessão compartilhada de um usuário entre sistemas integrados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sessao_id</strong> (<em>UUID</em>)</p></li>
+<li><p><strong>login</strong> (<em>str</em>)</p></li>
+<li><p><strong>kc_user_id</strong> (<em>str</em>)</p></li>
+<li><p><strong>criado_em</strong> (<em>datetime</em>)</p></li>
+<li><p><strong>ultima_atividade</strong> (<em>datetime</em>)</p></li>
+<li><p><strong>expira_em</strong> (<em>datetime</em>)</p></li>
+<li><p><strong>sistemas</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.sessao_id">
+<span class="sig-name descname"><span class="pre">sessao_id</span></span><a class="headerlink" href="#apps.sessoes.dominio.Sessao.sessao_id" title="Link para esta definição"></a></dt>
+<dd><p>Identificador único da sessão.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>uuid.UUID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.login">
+<span class="sig-name descname"><span class="pre">login</span></span><a class="headerlink" href="#apps.sessoes.dominio.Sessao.login" title="Link para esta definição"></a></dt>
+<dd><p>Login do usuário autenticado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.kc_user_id">
+<span class="sig-name descname"><span class="pre">kc_user_id</span></span><a class="headerlink" href="#apps.sessoes.dominio.Sessao.kc_user_id" title="Link para esta definição"></a></dt>
+<dd><p>Identificador do usuário no Keycloak.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.sistemas">
+<span class="sig-name descname"><span class="pre">sistemas</span></span><a class="headerlink" href="#apps.sessoes.dominio.Sessao.sistemas" title="Link para esta definição"></a></dt>
+<dd><p>Sistemas aos quais o usuário tinha acesso no
+momento da criação da sessão (<code class="docutils literal notranslate"><span class="pre">sistema_id</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sistema_nome</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.criado_em">
+<span class="sig-name descname"><span class="pre">criado_em</span></span><a class="headerlink" href="#apps.sessoes.dominio.Sessao.criado_em" title="Link para esta definição"></a></dt>
+<dd><p>Data/hora de criação da sessão.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime.datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.ultima_atividade">
+<span class="sig-name descname"><span class="pre">ultima_atividade</span></span><a class="headerlink" href="#apps.sessoes.dominio.Sessao.ultima_atividade" title="Link para esta definição"></a></dt>
+<dd><p>Data/hora da última renovação da sessão.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime.datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.expira_em">
+<span class="sig-name descname"><span class="pre">expira_em</span></span><a class="headerlink" href="#apps.sessoes.dominio.Sessao.expira_em" title="Link para esta definição"></a></dt>
+<dd><p>Teto absoluto de duração máxima da sessão — não se
+move após a criação.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime.datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">sessao_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UUID</span></em><a class="headerlink" href="#id0" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">login</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id1" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">kc_user_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id2" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">criado_em</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#id3" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">ultima_atividade</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#id4" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">expira_em</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#id5" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">sistemas</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id6" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/dominio.html#Sessao.to_dict"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.dominio.Sessao.to_dict" title="Link para esta definição"></a></dt>
+<dd><p>Serializa a sessão para um dicionário JSON-compatível.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dicionário com <code class="docutils literal notranslate"><span class="pre">sessao_id</span></code> e datas em formato ISO-8601,
+pronto para armazenamento no cache.</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.dominio.Sessao.from_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dados</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/dominio.html#Sessao.from_dict"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.dominio.Sessao.from_dict" title="Link para esta definição"></a></dt>
+<dd><p>Reconstrói uma sessão a partir de um dicionário serializado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dados</strong> – Dicionário no formato retornado por
+<a class="reference internal" href="#apps.sessoes.dominio.Sessao.to_dict" title="apps.sessoes.dominio.Sessao.to_dict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">to_dict()</span></code></a>.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instância de <a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sessao</span></code></a> com os tipos originais
+restaurados.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dados</strong> (<em>dict</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-apps.sessoes.services">Serviço de domínio da sessão compartilhada.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="apps.sessoes.services.GatewayIndisponivelError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.services.</span></span><span class="sig-name descname"><span class="pre">GatewayIndisponivelError</span></span><a class="reference internal" href="_modules/apps/sessoes/services.html#GatewayIndisponivelError"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.GatewayIndisponivelError" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>O Gateway não respondeu a tempo ou está inacessível.</p>
+<p>Levantada na criação da sessão: sem saber os sistemas do usuário,
+a sessão não tem utilidade, então falhar é o comportamento
+correto em vez de degradar silenciosamente (diferente do padrão
+usado pelo Gateway ao consultar o Token-MS no login, onde a
+ausência de dados complementares não impede a autenticação).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.services.ResultadoValidacao">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.services.</span></span><span class="sig-name descname"><span class="pre">ResultadoValidacao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">situacao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_disponivel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/services.html#ResultadoValidacao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.ResultadoValidacao" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Resultado da validação de uma sessão.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>situacao</strong> (<em>str</em>)</p></li>
+<li><p><strong>sessao</strong> (<a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>cache_disponivel</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.services.ResultadoValidacao.situacao">
+<span class="sig-name descname"><span class="pre">situacao</span></span><a class="headerlink" href="#apps.sessoes.services.ResultadoValidacao.situacao" title="Link para esta definição"></a></dt>
+<dd><p>Um de <code class="docutils literal notranslate"><span class="pre">&quot;valida&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;expirada_por_inatividade&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;expirada_por_duracao_maxima&quot;</span></code> ou <code class="docutils literal notranslate"><span class="pre">&quot;nao_encontrada&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.services.ResultadoValidacao.sessao">
+<span class="sig-name descname"><span class="pre">sessao</span></span><a class="headerlink" href="#apps.sessoes.services.ResultadoValidacao.sessao" title="Link para esta definição"></a></dt>
+<dd><p>A sessão consultada, quando encontrada.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao">apps.sessoes.dominio.Sessao</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.services.ResultadoValidacao.cache_disponivel">
+<span class="sig-name descname"><span class="pre">cache_disponivel</span></span><a class="headerlink" href="#apps.sessoes.services.ResultadoValidacao.cache_disponivel" title="Link para esta definição"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">False</span></code> quando não foi possível confirmar
+se a sessão existe porque o cache está indisponível.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">situacao</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id7" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">sessao</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><span class="pre">Sessao</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id8" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">cache_disponivel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id9" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.services.SessaoService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.services.</span></span><span class="sig-name descname"><span class="pre">SessaoService</span></span><a class="reference internal" href="_modules/apps/sessoes/services.html#SessaoService"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.SessaoService" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Serviço responsável pela sessão compartilhada.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.services.SessaoService.criar">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">criar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kc_user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/services.html#SessaoService.criar"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.SessaoService.criar" title="Link para esta definição"></a></dt>
+<dd><p>Cria uma nova sessão compartilhada.</p>
+<p>Consulta o Gateway para obter os sistemas aos quais o usuário
+tem acesso e grava a sessão no cache, com TTL calculado para
+nunca ultrapassar a duração máxima configurada.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>login</strong> – Login do usuário autenticado.</p></li>
+<li><p><strong>kc_user_id</strong> – Identificador do usuário no Keycloak.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sessão recém-criada.</p>
+</dd>
+<dt class="field-odd">Levanta<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#apps.sessoes.services.GatewayIndisponivelError" title="apps.sessoes.services.GatewayIndisponivelError"><strong>GatewayIndisponivelError</strong></a> – O Gateway não respondeu a tempo
+    ou está inacessível.</p>
+</dd>
+<dt class="field-even">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>login</strong> (<em>str</em>)</p></li>
+<li><p><strong>kc_user_id</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.services.SessaoService.obter">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">obter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/services.html#SessaoService.obter"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.SessaoService.obter" title="Link para esta definição"></a></dt>
+<dd><p>Obtém uma sessão do cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> – Identificador da sessão.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla <code class="docutils literal notranslate"><span class="pre">(sessao,</span> <span class="pre">cache_disponivel)</span></code> — <code class="docutils literal notranslate"><span class="pre">sessao</span></code> é
+<code class="docutils literal notranslate"><span class="pre">None</span></code> quando a chave não existe ou o cache está
+indisponível; <code class="docutils literal notranslate"><span class="pre">cache_disponivel</span></code> distingue os dois
+casos.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> (<em>UUID</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a> | None, bool]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.services.SessaoService.validar">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/services.html#SessaoService.validar"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.SessaoService.validar" title="Link para esta definição"></a></dt>
+<dd><p>Valida uma sessão, sem renovar sua atividade.</p>
+<p>Operação de leitura pura — não atualiza <code class="docutils literal notranslate"><span class="pre">ultima_atividade</span></code>,
+para que uma consulta não prolongue artificialmente uma
+sessão que deveria expirar por inatividade.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> – Identificador da sessão.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Resultado da validação com a situação da sessão.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> (<em>UUID</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#apps.sessoes.services.ResultadoValidacao" title="apps.sessoes.services.ResultadoValidacao"><em>ResultadoValidacao</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.services.SessaoService.renovar">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">renovar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/services.html#SessaoService.renovar"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.SessaoService.renovar" title="Link para esta definição"></a></dt>
+<dd><p>Renova a atividade de uma sessão válida.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> – Identificador da sessão.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sessão com <code class="docutils literal notranslate"><span class="pre">ultima_atividade</span></code> atualizada, ou <code class="docutils literal notranslate"><span class="pre">None</span></code>
+se a sessão não existir ou já estiver expirada.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> (<em>UUID</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.services.SessaoService.encerrar">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encerrar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/services.html#SessaoService.encerrar"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.services.SessaoService.encerrar" title="Link para esta definição"></a></dt>
+<dd><p>Encerra uma sessão, removendo-a do cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> – Identificador da sessão.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sessão que foi encerrada (para o chamador poder
+notificar os sistemas conectados), ou <code class="docutils literal notranslate"><span class="pre">None</span></code> se a
+sessão já não existia — encerrar uma sessão inexistente é
+idempotente, não é erro.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao_id</strong> (<em>UUID</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-apps.sessoes.logout_global">Propagação de logout global para os sistemas conectados à sessão.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.logout_global.ResultadoNotificacao">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.logout_global.</span></span><span class="sig-name descname"><span class="pre">ResultadoNotificacao</span></span><a class="reference internal" href="_modules/apps/sessoes/logout_global.html#ResultadoNotificacao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.logout_global.ResultadoNotificacao" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>Resultado da notificação de logout a um sistema.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.logout_global.ResultadoNotificacao.sistema_id">
+<span class="sig-name descname"><span class="pre">sistema_id</span></span><a class="headerlink" href="#apps.sessoes.logout_global.ResultadoNotificacao.sistema_id" title="Link para esta definição"></a></dt>
+<dd><p>Identificador do sistema notificado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.logout_global.ResultadoNotificacao.sistema_nome">
+<span class="sig-name descname"><span class="pre">sistema_nome</span></span><a class="headerlink" href="#apps.sessoes.logout_global.ResultadoNotificacao.sistema_nome" title="Link para esta definição"></a></dt>
+<dd><p>Nome do sistema notificado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.logout_global.ResultadoNotificacao.sucesso">
+<span class="sig-name descname"><span class="pre">sucesso</span></span><a class="headerlink" href="#apps.sessoes.logout_global.ResultadoNotificacao.sucesso" title="Link para esta definição"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> se a notificação foi entregue com sucesso.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.sessoes.logout_global.ResultadoNotificacao.detalhe">
+<span class="sig-name descname"><span class="pre">detalhe</span></span><a class="headerlink" href="#apps.sessoes.logout_global.ResultadoNotificacao.detalhe" title="Link para esta definição"></a></dt>
+<dd><p>Motivo da falha, quando <code class="docutils literal notranslate"><span class="pre">sucesso</span></code> é <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">sistema_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id10" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">sistema_nome</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id11" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">sucesso</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#id12" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">detalhe</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id13" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apps.sessoes.logout_global.notificar_logout_global">
+<span class="sig-prename descclassname"><span class="pre">apps.sessoes.logout_global.</span></span><span class="sig-name descname"><span class="pre">notificar_logout_global</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sessao</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/logout_global.html#notificar_logout_global"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.logout_global.notificar_logout_global" title="Link para esta definição"></a></dt>
+<dd><p>Notifica os sistemas conectados à sessão sobre o logout global.</p>
+<p>Dispara uma notificação em paralelo para cada sistema com
+callback configurado (<code class="docutils literal notranslate"><span class="pre">settings.LOGOUT_CALLBACKS</span></code>). Sistemas
+sem callback registrado são marcados como falha sem tentativa de
+rede — não há ainda um cadastro de sistemas com metadados de URL,
+então essa configuração estática é uma lacuna conhecida, não um
+erro de execução.</p>
+<p>Cada notificação é enviada com a mesma API Key usada para
+consultar o Gateway (<code class="docutils literal notranslate"><span class="pre">settings.API_KEY_GATEWAY_MS</span></code>) — reaproveita
+a credencial já configurada em vez de introduzir uma chave dedicada
+por sistema de callback, já que hoje o único receptor real é o
+endpoint de teste E2E do próprio Gateway.</p>
+<p>Esta função nunca propaga exceção: cada falha (timeout, erro de
+transporte, status não-2xx, ausência de callback) é isolada por
+sistema e reportada no resultado, sem interromper a notificação
+dos demais.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao</strong> – Sessão encerrada, com a lista de sistemas conectados.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Um resultado por sistema da sessão, na mesma ordem.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sessao</strong> (<a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#apps.sessoes.logout_global.ResultadoNotificacao" title="apps.sessoes.logout_global.ResultadoNotificacao"><em>ResultadoNotificacao</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-apps.sessoes.api.views">Views da API de sessão compartilhada.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.CriarSessaoView">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.views.</span></span><span class="sig-name descname"><span class="pre">CriarSessaoView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#CriarSessaoView"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.CriarSessaoView" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Cria uma sessão compartilhada, pós-login.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.CriarSessaoView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#CriarSessaoView.post"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.CriarSessaoView.post" title="Link para esta definição"></a></dt>
+<dd><p>Cria a sessão compartilhada.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – Requisição HTTP com <code class="docutils literal notranslate"><span class="pre">login</span></code> e <code class="docutils literal notranslate"><span class="pre">kc_user_id</span></code>.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sessão criada; 502 se o Gateway estiver inacessível ou
+não responder a tempo — sem saber os sistemas do usuário,
+a sessão não tem utilidade.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>Request</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Response</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.ConsultarSessaoView">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.views.</span></span><span class="sig-name descname"><span class="pre">ConsultarSessaoView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#ConsultarSessaoView"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.ConsultarSessaoView" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Consulta/valida uma sessão compartilhada, sem renová-la.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.ConsultarSessaoView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#ConsultarSessaoView.get"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.ConsultarSessaoView.get" title="Link para esta definição"></a></dt>
+<dd><p>Consulta o estado de uma sessão.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – Requisição HTTP recebida.</p></li>
+<li><p><strong>sessao_id</strong> – Identificador da sessão.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estado da sessão (válida ou expirada); 404 se a sessão
+nunca existiu ou já expurgou; 503 se não for possível
+confirmar (cache indisponível).</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>Request</em>)</p></li>
+<li><p><strong>sessao_id</strong> (<em>UUID</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Response</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.RenovarSessaoView">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.views.</span></span><span class="sig-name descname"><span class="pre">RenovarSessaoView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#RenovarSessaoView"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.RenovarSessaoView" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Renova a atividade de uma sessão compartilhada válida.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.RenovarSessaoView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#RenovarSessaoView.post"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.RenovarSessaoView.post" title="Link para esta definição"></a></dt>
+<dd><p>Renova a sessão.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – Requisição HTTP recebida.</p></li>
+<li><p><strong>sessao_id</strong> – Identificador da sessão.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sessão renovada; 409 se já estiver expirada; 404 se
+não existir.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>Request</em>)</p></li>
+<li><p><strong>sessao_id</strong> (<em>UUID</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Response</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.LogoutSessaoView">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.views.</span></span><span class="sig-name descname"><span class="pre">LogoutSessaoView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#LogoutSessaoView"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.LogoutSessaoView" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Encerra uma sessão e propaga o logout aos sistemas conectados.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.sessoes.api.views.LogoutSessaoView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessao_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/views.html#LogoutSessaoView.post"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.views.LogoutSessaoView.post" title="Link para esta definição"></a></dt>
+<dd><p>Encerra a sessão e dispara o logout global.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – Requisição HTTP recebida.</p></li>
+<li><p><strong>sessao_id</strong> – Identificador da sessão.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Confirmação do encerramento com o resumo das
+notificações por sistema; 404 se a sessão já não existia.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>Request</em>)</p></li>
+<li><p><strong>sessao_id</strong> (<em>UUID</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Response</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-apps.sessoes.api.serializers">Serializers da API de sessão compartilhada.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.serializers.CriarSessaoRequestSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.serializers.</span></span><span class="sig-name descname"><span class="pre">CriarSessaoRequestSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/serializers.html#CriarSessaoRequestSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.serializers.CriarSessaoRequestSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Dados necessários para criar uma sessão compartilhada.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.serializers.SistemaSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.serializers.</span></span><span class="sig-name descname"><span class="pre">SistemaSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/serializers.html#SistemaSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.serializers.SistemaSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Sistema associado a uma sessão.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.serializers.SessaoResponseSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.serializers.</span></span><span class="sig-name descname"><span class="pre">SessaoResponseSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/serializers.html#SessaoResponseSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.serializers.SessaoResponseSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Representação de uma sessão recém-criada ou renovada.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.serializers.ValidarSessaoResponseSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.serializers.</span></span><span class="sig-name descname"><span class="pre">ValidarSessaoResponseSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/serializers.html#ValidarSessaoResponseSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.serializers.ValidarSessaoResponseSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Resultado da consulta/validação de uma sessão.</p>
+<p><code class="docutils literal notranslate"><span class="pre">situacao</span></code> assume um de: <code class="docutils literal notranslate"><span class="pre">valida</span></code>,
+<code class="docutils literal notranslate"><span class="pre">expirada_por_inatividade</span></code>, <code class="docutils literal notranslate"><span class="pre">expirada_por_duracao_maxima</span></code>.
+Demais campos são omitidos quando a sessão está expirada — o
+chamador só precisa saber que não pode mais usá-la.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.serializers.NotificacaoLogoutSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.serializers.</span></span><span class="sig-name descname"><span class="pre">NotificacaoLogoutSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/serializers.html#NotificacaoLogoutSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.serializers.NotificacaoLogoutSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Resultado da notificação de logout a um sistema.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.sessoes.api.serializers.LogoutResponseSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.sessoes.api.serializers.</span></span><span class="sig-name descname"><span class="pre">LogoutResponseSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/sessoes/api/serializers.html#LogoutResponseSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.sessoes.api.serializers.LogoutResponseSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Confirmação do encerramento de sessão e logout global.</p>
+</dd></dl>
+
+</section>
+<section id="module-apps.login.services">
+<span id="login"></span><h2>Login<a class="headerlink" href="#module-apps.login.services" title="Link para este cabeçalho"></a></h2>
+<p>Serviço de login orquestrado: autenticação + sessão compartilhada.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="apps.login.services.LoginError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.login.services.</span></span><span class="sig-name descname"><span class="pre">LoginError</span></span><a class="reference internal" href="_modules/apps/login/services.html#LoginError"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.services.LoginError" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Login ou senha inválidos.</p>
+<p>Levantada tanto para senha incorreta quanto para usuário
+inexistente no Keycloak — o SSO-MS trata os dois casos da mesma
+forma para não permitir que um consumidor descubra quais logins
+existem testando senhas em branco.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.login.services.ResultadoLogin">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.login.services.</span></span><span class="sig-name descname"><span class="pre">ResultadoLogin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dados_autenticacao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessao</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessao_erro</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/login/services.html#ResultadoLogin"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.services.ResultadoLogin" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Resultado do login orquestrado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dados_autenticacao</strong> (<em>dict</em>)</p></li>
+<li><p><strong>sessao</strong> (<a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><em>Sessao</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>sessao_erro</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.login.services.ResultadoLogin.dados_autenticacao">
+<span class="sig-name descname"><span class="pre">dados_autenticacao</span></span><a class="headerlink" href="#apps.login.services.ResultadoLogin.dados_autenticacao" title="Link para esta definição"></a></dt>
+<dd><p>Dados retornados pelo Gateway (tokens,
+dados cadastrais, roles).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.login.services.ResultadoLogin.sessao">
+<span class="sig-name descname"><span class="pre">sessao</span></span><a class="headerlink" href="#apps.login.services.ResultadoLogin.sessao" title="Link para esta definição"></a></dt>
+<dd><p>A sessão compartilhada criada, ou <code class="docutils literal notranslate"><span class="pre">None</span></code> se a
+criação falhou por indisponibilidade do Gateway.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao">apps.sessoes.dominio.Sessao</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="apps.login.services.ResultadoLogin.sessao_erro">
+<span class="sig-name descname"><span class="pre">sessao_erro</span></span><a class="headerlink" href="#apps.login.services.ResultadoLogin.sessao_erro" title="Link para esta definição"></a></dt>
+<dd><p>Motivo da falha na criação da sessão, quando
+<code class="docutils literal notranslate"><span class="pre">sessao</span></code> é <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">dados_autenticacao</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#id14" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">sessao</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#apps.sessoes.dominio.Sessao" title="apps.sessoes.dominio.Sessao"><span class="pre">Sessao</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id15" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">sessao_erro</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id16" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.login.services.LoginService">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.login.services.</span></span><span class="sig-name descname"><span class="pre">LoginService</span></span><a class="reference internal" href="_modules/apps/login/services.html#LoginService"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.services.LoginService" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Autentica um usuário e cria sua sessão compartilhada.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.login.services.LoginService.autenticar_e_criar_sessao">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">autenticar_e_criar_sessao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">login</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">senha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/login/services.html#LoginService.autenticar_e_criar_sessao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.services.LoginService.autenticar_e_criar_sessao" title="Link para esta definição"></a></dt>
+<dd><p>Autentica no Gateway e cria a sessão compartilhada.</p>
+<p>A autenticação real acontece no Keycloak, via Gateway. Se ela
+for bem-sucedida mas a criação da sessão falhar por
+indisponibilidade do Gateway (segunda chamada, para obter os
+sistemas do usuário), o login não é desfeito — a sessão
+apenas fica ausente na resposta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>login</strong> – RF, CPF ou username do usuário.</p></li>
+<li><p><strong>senha</strong> – Senha em texto plano.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dados de autenticação e a sessão criada (ou o motivo da
+falha, se a sessão não pôde ser criada).</p>
+</dd>
+<dt class="field-odd">Levanta<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#apps.login.services.LoginError" title="apps.login.services.LoginError"><strong>LoginError</strong></a> – Login ou senha inválidos.</p></li>
+<li><p><a class="reference internal" href="#apps.sessoes.services.GatewayIndisponivelError" title="apps.sessoes.services.GatewayIndisponivelError"><strong>GatewayIndisponivelError</strong></a> – O Gateway não respondeu a tempo
+    ou está inacessível na chamada de autenticação.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>login</strong> (<em>str</em>)</p></li>
+<li><p><strong>senha</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#apps.login.services.ResultadoLogin" title="apps.login.services.ResultadoLogin"><em>ResultadoLogin</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-apps.login.api.views">Views da API de login orquestrado.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.login.api.views.LoginView">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.login.api.views.</span></span><span class="sig-name descname"><span class="pre">LoginView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/login/api/views.html#LoginView"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.api.views.LoginView" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Autentica um usuário e cria sua sessão compartilhada.</p>
+<p>Orquestra, numa única chamada, o login no
+SME-Identidade-Gateway-Microsservico e a criação da sessão
+compartilhada no SSO-MS — equivale a
+<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/autenticacao/login/</span></code> no Gateway seguido de
+<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/sessoes/</span></code> aqui.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="apps.login.api.views.LoginView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/login/api/views.html#LoginView.post"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.api.views.LoginView.post" title="Link para esta definição"></a></dt>
+<dd><p>Autentica o usuário e cria a sessão compartilhada.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – Requisição HTTP com <code class="docutils literal notranslate"><span class="pre">login</span></code> e <code class="docutils literal notranslate"><span class="pre">senha</span></code>.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dados de autenticação e a sessão criada; 401 se as
+credenciais forem inválidas; 502 se o Gateway estiver
+inacessível na autenticação.</p>
+</dd>
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>Request</em>)</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Response</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-apps.login.api.serializers">Serializers da API de login orquestrado.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.login.api.serializers.LoginRequestSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.login.api.serializers.</span></span><span class="sig-name descname"><span class="pre">LoginRequestSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/login/api/serializers.html#LoginRequestSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.api.serializers.LoginRequestSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Credenciais recebidas para autenticação de um usuário.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="apps.login.api.serializers.LoginResponseSerializer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.login.api.serializers.</span></span><span class="sig-name descname"><span class="pre">LoginResponseSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/apps/login/api/serializers.html#LoginResponseSerializer"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#apps.login.api.serializers.LoginResponseSerializer" title="Link para esta definição"></a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<p>Resultado do login com a sessão compartilhada já criada.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="arquitetura/fluxo_logout_global.html" class="btn btn-neutral float-left" title="Fluxo de logout global" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais .</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

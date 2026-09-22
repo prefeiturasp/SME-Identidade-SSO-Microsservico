@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sessão compartilhada &mdash; SME-Identidade-SSO-Microsservico</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2346ddef"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Visão geral" href="arquitetura/visao_geral.html" />
+    <link rel="prev" title="SME Identidade SSO Microsserviço" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SME-Identidade-SSO-Microsservico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sessão compartilhada</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#armazenamento">Armazenamento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sistemas-da-sessao">Sistemas da sessão</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#endpoints">Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#login-orquestrado">Login orquestrado</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#criar-sessao">Criar sessão</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#consultar-validar-sessao">Consultar/validar sessão</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#renovar-sessao">Renovar sessão</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#encerrar-sessao-logout-global">Encerrar sessão (logout global)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuracao-de-callbacks-de-logout">Configuração de callbacks de logout</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="arquitetura/visao_geral.html">Visão geral</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arquitetura/fluxo_logout_global.html">Fluxo de logout global</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Referência de código</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SME-Identidade-SSO-Microsservico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Sessão compartilhada</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sessoes.md.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sessao-compartilhada">
+<h1>Sessão compartilhada<a class="headerlink" href="#sessao-compartilhada" title="Link para este cabeçalho"></a></h1>
+<p>Esta página descreve o contrato dos endpoints de sessão compartilhada, a
+estrutura de armazenamento no KeyDB e o mecanismo de logout global.
+Detalhes de schema (tipos exatos, exemplos gerados) estão disponíveis no
+Swagger em <code class="docutils literal notranslate"><span class="pre">/identidade-sso/api/v1/docs/</span></code>.</p>
+<section id="armazenamento">
+<h2>Armazenamento<a class="headerlink" href="#armazenamento" title="Link para este cabeçalho"></a></h2>
+<p>A sessão vive inteiramente no KeyDB — não há persistência em banco
+relacional. Cada sessão é identificada por um <code class="docutils literal notranslate"><span class="pre">sessao_id</span></code> (UUID gerado
+na criação), permitindo múltiplas sessões simultâneas para o mesmo
+usuário (múltiplos dispositivos/abas).</p>
+<p>Chave: <code class="docutils literal notranslate"><span class="pre">sessao:{sessao_id}</span></code>. Valor armazenado:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"sessao_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uuid"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"kc_user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uuid-keycloak"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sistemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"sistema_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"sistema_nome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CoreSSO"</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"criado_em"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iso-datetime"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ultima_atividade"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iso-datetime"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expira_em"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iso-datetime"</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">expira_em</span></code> é o teto absoluto de duração máxima da sessão, fixado na
+criação — não se move. <code class="docutils literal notranslate"><span class="pre">ultima_atividade</span></code> se move a cada renovação e é
+comparado contra o tempo de inatividade configurado em cada validação.</p>
+<p>O TTL de cada escrita no KeyDB é sempre <code class="docutils literal notranslate"><span class="pre">min(tempo</span> <span class="pre">de</span> <span class="pre">inatividade,</span> <span class="pre">segundos</span> <span class="pre">restantes</span> <span class="pre">até</span> <span class="pre">expira_em)</span></code> — garante que o KeyDB expurga a
+chave sozinho mesmo que a lógica de validação nunca seja chamada de
+novo, sem depender de uma tarefa de limpeza externa.</p>
+</section>
+<section id="sistemas-da-sessao">
+<h2>Sistemas da sessão<a class="headerlink" href="#sistemas-da-sessao" title="Link para este cabeçalho"></a></h2>
+<p>No momento da criação, o SSO-MS consulta o
+SME-Identidade-Gateway-Microsservico (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">{GATEWAY_MS_URL}/api/v1/autenticacao/usuarios/{login}/sistemas/</span></code>) para
+obter os sistemas aos quais o usuário tem acesso. Se o Gateway não
+responder a tempo ou estiver inacessível, a criação da sessão falha
+(502) — sem saber os sistemas, a sessão não tem utilidade.</p>
+</section>
+<section id="endpoints">
+<h2>Endpoints<a class="headerlink" href="#endpoints" title="Link para este cabeçalho"></a></h2>
+<section id="login-orquestrado">
+<h3>Login orquestrado<a class="headerlink" href="#login-orquestrado" title="Link para este cabeçalho"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/identidade-sso/api/v1/login/</span></code></p>
+<p>Autentica o usuário no SME-Identidade-Gateway-Microsservico
+(<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/autenticacao/login/</span></code>) e, em caso de sucesso, já cria a
+sessão compartilhada — equivale a chamar o login do Gateway seguido de
+“Criar sessão” (abaixo) numa única requisição. O <code class="docutils literal notranslate"><span class="pre">sessao_id</span></code> retornado
+é o token de sessão usado pelos sistemas conectados; não é emitido
+nenhum JWT adicional para representar a sessão.</p>
+<p>Request:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567"</span><span class="p">,</span><span class="w"> </span><span class="nt">"senha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"minhaSenha123"</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Resposta 201 — inclui todos os campos retornados pelo login do Gateway
+(<code class="docutils literal notranslate"><span class="pre">access_token</span></code>, <code class="docutils literal notranslate"><span class="pre">refresh_token</span></code>, <code class="docutils literal notranslate"><span class="pre">token_enriquecido</span></code>, dados
+cadastrais, <code class="docutils literal notranslate"><span class="pre">roles</span></code>) mais o campo <code class="docutils literal notranslate"><span class="pre">sessao</span></code> com o mesmo formato da
+resposta de “Criar sessão”:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"kc_user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c29cc47-0000-0000-0000-000000000000"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"demais campos do login do Gateway"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessao"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"sessao_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b2b2b2b2-0000-0000-0000-000000000000"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"sistemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"sistema_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"sistema_nome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CoreSSO"</span><span class="p">}],</span>
+<span class="w">    </span><span class="nt">"criado_em"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-09T12:00:00Z"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ultima_atividade"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-09T12:00:00Z"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"expira_em"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-09T20:00:00Z"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"sessao_erro"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Resposta 201 com <code class="docutils literal notranslate"><span class="pre">sessao:</span> <span class="pre">null</span></code> e <code class="docutils literal notranslate"><span class="pre">sessao_erro</span></code> preenchido — a
+autenticação no Keycloak já aconteceu de verdade e não é desfeita por
+uma falha secundária ao criar a sessão (mesmo princípio “not-blocking”
+que o Gateway já usa para o token enriquecido no login); os tokens
+retornados continuam válidos, só falta a sessão compartilhada.</p>
+<p>Resposta 401 — login ou senha inválidos. Usuário inexistente no
+Keycloak recebe o mesmo tratamento (401), para não permitir que um
+consumidor descubra quais logins existem testando senhas em branco.</p>
+<p>Resposta 502 — Gateway indisponível na autenticação (primeira
+chamada).</p>
+</section>
+<section id="criar-sessao">
+<h3>Criar sessão<a class="headerlink" href="#criar-sessao" title="Link para este cabeçalho"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/identidade-sso/api/v1/sessoes/</span></code></p>
+<p>Usado quando a autenticação já ocorreu separadamente (o chamador já
+tem <code class="docutils literal notranslate"><span class="pre">kc_user_id</span></code>) — para o fluxo de login + sessão numa única chamada,
+ver “Login orquestrado” acima.</p>
+<p>Request:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567"</span><span class="p">,</span><span class="w"> </span><span class="nt">"kc_user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c29cc47-0000-0000-0000-000000000000"</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Resposta 201:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"sessao_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b2b2b2b2-0000-0000-0000-000000000000"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sistemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"sistema_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"sistema_nome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CoreSSO"</span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"criado_em"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-08T10:00:00-03:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expira_em"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-08T18:00:00-03:00"</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Resposta 502 — Gateway inacessível ou não respondeu a tempo.</p>
+</section>
+<section id="consultar-validar-sessao">
+<h3>Consultar/validar sessão<a class="headerlink" href="#consultar-validar-sessao" title="Link para este cabeçalho"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/identidade-sso/api/v1/sessoes/{sessao_id}/</span></code></p>
+<p>Operação de leitura pura — <strong>não</strong> renova a atividade da sessão. Renovar
+é uma ação explícita (ver abaixo), para que uma consulta não prolongue
+artificialmente uma sessão que deveria expirar por inatividade.</p>
+<p>Resposta 200, <code class="docutils literal notranslate"><span class="pre">situacao</span></code> pode ser <code class="docutils literal notranslate"><span class="pre">valida</span></code>, <code class="docutils literal notranslate"><span class="pre">expirada_por_inatividade</span></code>
+ou <code class="docutils literal notranslate"><span class="pre">expirada_por_duracao_maxima</span></code> — o estado é retornado ao chamador, não
+é um erro de protocolo.</p>
+<p>Resposta 404 — a sessão nunca existiu ou já foi expurgada do KeyDB
+(miss confirmado). Resposta 503 — o KeyDB está indisponível, não é
+possível confirmar se a sessão existe (miss não-confirmado). A
+distinção entre 404 e 503 importa porque, diferente do cache do
+SME-Identidade-Token-Microsservico, aqui não há fallback a um banco —
+o KeyDB é a única fonte de verdade da sessão.</p>
+</section>
+<section id="renovar-sessao">
+<h3>Renovar sessão<a class="headerlink" href="#renovar-sessao" title="Link para este cabeçalho"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/identidade-sso/api/v1/sessoes/{sessao_id}/renovar/</span></code></p>
+<p>Atualiza <code class="docutils literal notranslate"><span class="pre">ultima_atividade</span></code> para o instante atual e recalcula o TTL da
+chave no KeyDB.</p>
+<p>Resposta 200 com a sessão atualizada. Resposta 409 — a sessão já está
+expirada, não é possível renovar. Resposta 404 — sessão não encontrada.</p>
+</section>
+<section id="encerrar-sessao-logout-global">
+<h3>Encerrar sessão (logout global)<a class="headerlink" href="#encerrar-sessao-logout-global" title="Link para este cabeçalho"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/identidade-sso/api/v1/sessoes/{sessao_id}/logout/</span></code></p>
+<p>Encerra a sessão no KeyDB e, em seguida, notifica em paralelo cada
+sistema presente em <code class="docutils literal notranslate"><span class="pre">sistemas</span></code> sobre o logout global — ver
+<a class="reference internal" href="arquitetura/fluxo_logout_global.html"><span class="std std-doc">Fluxo de logout global</span></a>.</p>
+<p>A sessão é <strong>sempre</strong> encerrada antes de qualquer tentativa de
+notificação: encerrar é garantido, notificar é melhor esforço. A
+resposta é sempre 200, mesmo que todas as notificações falhem.</p>
+<p>Resposta 200:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"sessao_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b2b2b2b2-0000-0000-0000-000000000000"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"situacao"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sessao_encerrada"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"notificacoes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">"sistema_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"sistema_nome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CoreSSO"</span><span class="p">,</span><span class="w"> </span><span class="nt">"sucesso"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"detalhe"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">"sistema_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">176</span><span class="p">,</span><span class="w"> </span><span class="nt">"sistema_nome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boletim Online"</span><span class="p">,</span><span class="w"> </span><span class="nt">"sucesso"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"detalhe"</span><span class="p">:</span><span class="w"> </span><span class="s2">"timeout"</span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Resposta 404 — a sessão já não existia (mais honesto que responder 200
+idempotente vazio; evita mascarar um <code class="docutils literal notranslate"><span class="pre">sessao_id</span></code> inválido enviado por
+engano).</p>
+</section>
+</section>
+<section id="configuracao-de-callbacks-de-logout">
+<h2>Configuração de callbacks de logout<a class="headerlink" href="#configuracao-de-callbacks-de-logout" title="Link para este cabeçalho"></a></h2>
+<p>Não existe ainda um cadastro de sistemas com metadados de URL de
+callback — apenas <code class="docutils literal notranslate"><span class="pre">sistema_id</span></code>/<code class="docutils literal notranslate"><span class="pre">sistema_nome</span></code> chegam via CoreSSO
+(através do Token-MS e do Gateway). A solução adotada nesta fase é uma
+variável de ambiente estática:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SSO_LOGOUT_CALLBACKS</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">gateway</span><span class="o">-</span><span class="n">ms</span><span class="p">:</span><span class="mi">8000</span><span class="o">/</span><span class="n">identidade</span><span class="o">-</span><span class="n">gateway</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">autenticacao</span><span class="o">/</span><span class="n">logout</span><span class="o">-</span><span class="n">notificacao</span><span class="o">/</span><span class="p">,</span><span class="mi">176</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">outro</span><span class="o">-</span><span class="n">sistema</span><span class="o">/</span><span class="n">logout</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>Formato: <code class="docutils literal notranslate"><span class="pre">sistema_id:url,sistema_id:url</span></code>. Um sistema presente na sessão
+mas sem callback configurado é reportado como falha
+(<code class="docutils literal notranslate"><span class="pre">&quot;sem</span> <span class="pre">callback</span> <span class="pre">registrado&quot;</span></code>), sem tentativa de rede — não é um erro de
+execução.</p>
+<p>Isso é uma <strong>dívida técnica intencional</strong>: a evolução natural é um
+cadastro de sistemas versionado com URL de callback por sistema, fora
+do escopo desta fase.</p>
+<p>Cada notificação é enviada com a mesma API Key usada para consultar o
+Gateway (<code class="docutils literal notranslate"><span class="pre">API_KEY_GATEWAY_MS</span></code>/<code class="docutils literal notranslate"><span class="pre">API_KEY_GATEWAY_MS_HEADER</span></code>) — reaproveita
+a credencial já configurada em vez de introduzir uma chave dedicada por
+sistema de callback, já que hoje o único receptor real é o endpoint de
+teste E2E do próprio Gateway.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="index.html" class="btn btn-neutral float-left" title="SME Identidade SSO Microsserviço" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="arquitetura/visao_geral.html" class="btn btn-neutral float-right" title="Visão geral" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais .</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>apps.sessoes.dominio &mdash; SME-Identidade-SSO-Microsservico</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2346ddef"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SME-Identidade-SSO-Microsservico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../sessoes.html">Sessão compartilhada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../arquitetura/visao_geral.html">Visão geral</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../arquitetura/fluxo_logout_global.html">Fluxo de logout global</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Referência de código</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SME-Identidade-SSO-Microsservico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">apps.sessoes.dominio</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para apps.sessoes.dominio</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Modelo de domínio da sessão compartilhada.</span>
+
+<span class="sd">A sessão não é persistida em banco relacional — vive inteiramente no</span>
+<span class="sd">KeyDB, com TTL natural (ver ``apps.sessoes.services.SessaoService``).</span>
+<span class="sd">Este módulo define apenas a estrutura de dados e sua serialização</span>
+<span class="sd">para/de JSON, sem lógica de negócio.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+
+
+<div class="viewcode-block" id="Sessao">
+<a class="viewcode-back" href="../../../api.html#apps.sessoes.dominio.Sessao">[documentos]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Sessao</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Sessão compartilhada de um usuário entre sistemas integrados.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sessao_id: Identificador único da sessão.</span>
+<span class="sd">        login: Login do usuário autenticado.</span>
+<span class="sd">        kc_user_id: Identificador do usuário no Keycloak.</span>
+<span class="sd">        sistemas: Sistemas aos quais o usuário tinha acesso no</span>
+<span class="sd">            momento da criação da sessão (``sistema_id``,</span>
+<span class="sd">            ``sistema_nome``).</span>
+<span class="sd">        criado_em: Data/hora de criação da sessão.</span>
+<span class="sd">        ultima_atividade: Data/hora da última renovação da sessão.</span>
+<span class="sd">        expira_em: Teto absoluto de duração máxima da sessão — não se</span>
+<span class="sd">            move após a criação.</span>
+<span class="sd">    """</span>
+
+    <span class="n">sessao_id</span><span class="p">:</span> <span class="n">UUID</span>
+    <span class="n">login</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">kc_user_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">criado_em</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">ultima_atividade</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">expira_em</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">sistemas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Sessao.to_dict">
+<a class="viewcode-back" href="../../../api.html#apps.sessoes.dominio.Sessao.to_dict">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Serializa a sessão para um dicionário JSON-compatível.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dicionário com ``sessao_id`` e datas em formato ISO-8601,</span>
+<span class="sd">            pronto para armazenamento no cache.</span>
+<span class="sd">        """</span>
+        <span class="n">dados</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">dados</span><span class="p">[</span><span class="s2">"sessao_id"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessao_id</span><span class="p">)</span>
+        <span class="n">dados</span><span class="p">[</span><span class="s2">"criado_em"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criado_em</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">dados</span><span class="p">[</span><span class="s2">"ultima_atividade"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ultima_atividade</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">dados</span><span class="p">[</span><span class="s2">"expira_em"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expira_em</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">dados</span></div>
+
+
+<div class="viewcode-block" id="Sessao.from_dict">
+<a class="viewcode-back" href="../../../api.html#apps.sessoes.dominio.Sessao.from_dict">[documentos]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dados</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sessao</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Reconstrói uma sessão a partir de um dicionário serializado.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dados: Dicionário no formato retornado por</span>
+<span class="sd">                :meth:`to_dict`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Instância de :class:`Sessao` com os tipos originais</span>
+<span class="sd">            restaurados.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">sessao_id</span><span class="o">=</span><span class="n">UUID</span><span class="p">(</span><span class="n">dados</span><span class="p">[</span><span class="s2">"sessao_id"</span><span class="p">]),</span>
+            <span class="n">login</span><span class="o">=</span><span class="n">dados</span><span class="p">[</span><span class="s2">"login"</span><span class="p">],</span>
+            <span class="n">kc_user_id</span><span class="o">=</span><span class="n">dados</span><span class="p">[</span><span class="s2">"kc_user_id"</span><span class="p">],</span>
+            <span class="n">sistemas</span><span class="o">=</span><span class="n">dados</span><span class="p">[</span><span class="s2">"sistemas"</span><span class="p">],</span>
+            <span class="n">criado_em</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">dados</span><span class="p">[</span><span class="s2">"criado_em"</span><span class="p">]),</span>
+            <span class="n">ultima_atividade</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span>
+                <span class="n">dados</span><span class="p">[</span><span class="s2">"ultima_atividade"</span><span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">expira_em</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">dados</span><span class="p">[</span><span class="s2">"expira_em"</span><span class="p">]),</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais .</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

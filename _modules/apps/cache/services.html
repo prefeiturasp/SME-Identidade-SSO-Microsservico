@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>apps.cache.services &mdash; SME-Identidade-SSO-Microsservico</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2346ddef"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SME-Identidade-SSO-Microsservico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../sessoes.html">Sessão compartilhada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../arquitetura/visao_geral.html">Visão geral</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../arquitetura/fluxo_logout_global.html">Fluxo de logout global</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Referência de código</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SME-Identidade-SSO-Microsservico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">apps.cache.services</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para apps.cache.services</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Serviços responsáveis pelas operações de cache."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">_CHAVE_HEALTHCHECK</span> <span class="o">=</span> <span class="s2">"__cache_healthcheck__"</span>
+
+
+<div class="viewcode-block" id="CacheService">
+<a class="viewcode-back" href="../../../api.html#apps.cache.services.CacheService">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CacheService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Serviço responsável pelas operações de cache.</span>
+
+<span class="sd">    O KeyDB é a única fonte de verdade da sessão compartilhada — não</span>
+<span class="sd">    há fallback a um banco relacional, diferente do uso de cache do</span>
+<span class="sd">    SME-Identidade-Token-Microsservico. Por isso, além das operações</span>
+<span class="sd">    usuais (fail-safe, nunca propagam exceção), este serviço também</span>
+<span class="sd">    expõe :meth:`disponivel`, usado para distinguir "sessão não</span>
+<span class="sd">    existe" de "cache indisponível" quando :meth:`obter` retorna</span>
+<span class="sd">    ``None``.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="CacheService.obter">
+<a class="viewcode-back" href="../../../api.html#apps.cache.services.CacheService.obter">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">obter</span><span class="p">(</span><span class="n">chave</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Obtém um valor armazenado em cache.</span>
+
+<span class="sd">        Caso o serviço de cache esteja indisponível, retorna ``None``,</span>
+<span class="sd">        permitindo que a aplicação continue normalmente.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            chave: Chave utilizada para localizar o valor em cache.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Valor armazenado ou ``None`` caso não exista ou ocorra alguma</span>
+<span class="sd">            falha durante a consulta.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">object</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">chave</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Falha ao obter valor do cache."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="CacheService.salvar">
+<a class="viewcode-back" href="../../../api.html#apps.cache.services.CacheService.salvar">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">salvar</span><span class="p">(</span>
+        <span class="n">chave</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">valor</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Armazena um valor em cache.</span>
+
+<span class="sd">        Caso o cache esteja indisponível, registra a ocorrência em log sem</span>
+<span class="sd">        interromper o fluxo da aplicação.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            chave: Chave utilizada para armazenamento.</span>
+<span class="sd">            valor: Valor que será armazenado.</span>
+<span class="sd">            timeout: Tempo de expiração em segundos. Quando omitido,</span>
+<span class="sd">                usa o padrão configurado em ``CACHES``.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+                <span class="n">chave</span><span class="p">,</span>
+                <span class="n">valor</span><span class="p">,</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Falha ao salvar valor no cache."</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CacheService.invalidar">
+<a class="viewcode-back" href="../../../api.html#apps.cache.services.CacheService.invalidar">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invalidar</span><span class="p">(</span><span class="n">chave</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Remove um valor armazenado em cache.</span>
+
+<span class="sd">        Caso o cache esteja indisponível, registra a ocorrência em log sem</span>
+<span class="sd">        interromper o fluxo da aplicação.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            chave: Chave do registro que será removido.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">chave</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Falha ao invalidar valor do cache."</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CacheService.disponivel">
+<a class="viewcode-back" href="../../../api.html#apps.cache.services.CacheService.disponivel">[documentos]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disponivel</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Verifica se o cache está respondendo.</span>
+
+<span class="sd">        Faz um round-trip trivial de escrita e leitura. Usado quando</span>
+<span class="sd">        :meth:`obter` retorna ``None`` e é preciso saber se isso</span>
+<span class="sd">        significa "chave não existe" ou "cache fora do ar" — distinção</span>
+<span class="sd">        que importa porque aqui o cache é a única fonte de verdade da</span>
+<span class="sd">        sessão, sem fallback a um banco relacional.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` se o cache respondeu com sucesso, ``False`` caso</span>
+<span class="sd">            contrário.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">_CHAVE_HEALTHCHECK</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_CHAVE_HEALTHCHECK</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Falha ao verificar disponibilidade do cache."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais .</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

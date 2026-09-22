@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluxo de logout global &mdash; SME-Identidade-SSO-Microsservico</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2346ddef"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=71a39b36"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Buscar" href="../search.html" />
+    <link rel="next" title="Referência de código" href="../api.html" />
+    <link rel="prev" title="Visão geral" href="visao_geral.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SME-Identidade-SSO-Microsservico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../sessoes.html">Sessão compartilhada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visao_geral.html">Visão geral</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Fluxo de logout global</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sequencia">Sequência</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decisoes">Decisões</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#endpoint-de-recepcao-de-exemplo">Endpoint de recepção de exemplo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Referência de código</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SME-Identidade-SSO-Microsservico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Fluxo de logout global</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/arquitetura/fluxo_logout_global.md.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fluxo-de-logout-global">
+<h1>Fluxo de logout global<a class="headerlink" href="#fluxo-de-logout-global" title="Link para este cabeçalho"></a></h1>
+<p>Logout em um sistema deve encerrar a sessão nos demais sistemas
+conectados na mesma sessão do SSO-MS — evitando sessão órfã ativa em
+outro sistema depois que o usuário já saiu.</p>
+<section id="sequencia">
+<h2>Sequência<a class="headerlink" href="#sequencia" title="Link para este cabeçalho"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Sistema A                SSO-MS                    KeyDB          Sistema B / C / ...
+   │                        │                         │                  │
+   │ POST .../logout/       │                         │                  │
+   ├───────────────────────▶│                         │                  │
+   │                        │ obtém a sessão          │                  │
+   │                        ├────────────────────────▶│                  │
+   │                        │◀────────────────────────┤                  │
+   │                        │ invalida a chave         │                  │
+   │                        ├────────────────────────▶│                  │
+   │                        │                         │                  │
+   │                        │ dispara notificações em paralelo            │
+   │                        │ (ThreadPoolExecutor, 1 POST por sistema)    │
+   │                        ├─────────────────────────────────────────────▶
+   │                        │◀─────────────────────────────────────────────
+   │                        │ agrega resultados        │                  │
+   │◀───────────────────────┤ (sempre 200)             │                  │
+</pre></div>
+</div>
+</section>
+<section id="decisoes">
+<h2>Decisões<a class="headerlink" href="#decisoes" title="Link para este cabeçalho"></a></h2>
+<ul class="simple">
+<li><p><strong>Encerrar é garantido, notificar é melhor esforço.</strong> A sessão é
+removida do KeyDB <strong>antes</strong> de qualquer tentativa de notificação. Se
+todas as notificações falharem, a resposta ainda é 200 — o usuário
+não pode ficar com uma sessão “presa” por causa de um sistema fora do
+ar.</p></li>
+<li><p><strong>Notificações em paralelo</strong>, via <code class="docutils literal notranslate"><span class="pre">concurrent.futures.ThreadPoolExecutor</span></code>
+(biblioteca padrão, sem dependência nova). Sequencial seria O(n) na
+latência total e um sistema lento atrasaria a resposta do logout para
+o usuário.</p></li>
+<li><p><strong>Timeout curto por chamada</strong> (<code class="docutils literal notranslate"><span class="pre">SSO_LOGOUT_CALLBACK_TIMEOUT</span></code>, default
+5s) — cada falha (timeout, erro de transporte, status não-2xx) é
+isolada por sistema e nunca propaga exceção para o chamador do
+endpoint de logout.</p></li>
+<li><p><strong>Sistemas legados sem suporte a notificação</strong> (sem endpoint de
+recepção próprio) são tratados como “sem callback registrado” — a
+configuração de URLs (<code class="docutils literal notranslate"><span class="pre">SSO_LOGOUT_CALLBACKS</span></code>) é quem decide quais
+sistemas recebem notificação; sistemas ausentes dessa configuração
+não geram erro, apenas ficam de fora da propagação. A referência para
+saber quais sistemas suportam esse tipo de notificação é a
+classificação de complexidade já levantada no contrato de integração
+da plataforma — não um levantamento novo feito por este serviço.</p></li>
+</ul>
+</section>
+<section id="endpoint-de-recepcao-de-exemplo">
+<h2>Endpoint de recepção de exemplo<a class="headerlink" href="#endpoint-de-recepcao-de-exemplo" title="Link para este cabeçalho"></a></h2>
+<p>O SME-Identidade-Gateway-Microsservico expõe
+<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/identidade-gateway/api/v1/autenticacao/logout-notificacao/</span></code> como
+sistema de teste E2E do mecanismo — recebe <code class="docutils literal notranslate"><span class="pre">sessao_id</span></code>, <code class="docutils literal notranslate"><span class="pre">login</span></code> e
+<code class="docutils literal notranslate"><span class="pre">kc_user_id</span></code>, loga o recebimento e confirma. O Gateway não mantém sessão
+própria, então não há nada real a invalidar ali; serve apenas para
+validar que a propagação chega a um sistema conectado.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="visao_geral.html" class="btn btn-neutral float-left" title="Visão geral" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="../api.html" class="btn btn-neutral float-right" title="Referência de código" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais .</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
