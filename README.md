@@ -12,7 +12,6 @@ O serviço não autentica usuários nem detém a projeção de permissões — c
 │   ├── core/            # health check
 │   ├── autenticacao/    # autenticação por API Key dos endpoints do SSO-MS
 │   ├── cache/           # encapsula operações no KeyDB
-│   ├── gateway_ms/      # cliente HTTP do SME-Identidade-Gateway-Microsservico
 │   ├── sessoes/         # sessão compartilhada e logout global
 │   └── login/           # login orquestrado (Gateway + sessão compartilhada)
 ├── config/              # settings, urls, wsgi
@@ -139,7 +138,6 @@ Use `make help` para listar todos os comandos disponíveis. Os principais:
 | `make test-core` | Apenas `apps.core` |
 | `make test-cache` | Apenas `apps.cache` |
 | `make test-autenticacao` | Apenas `apps.autenticacao` |
-| `make test-gateway-ms` | Apenas `apps.gateway_ms` |
 | `make test-sessoes` | Apenas `apps.sessoes` |
 | `make test-login` | Apenas `apps.login` |
 
