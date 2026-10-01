@@ -13,10 +13,12 @@ from django.utils import timezone
 
 from apps.cache import chaves
 from apps.cache.services import CacheService
-from apps.gateway_ms.cliente import cliente_gateway_ms
+from apps.core.api_clients import get_api_client
 from apps.sessoes.dominio import Sessao
 
 logger = logging.getLogger(__name__)
+
+_client = get_api_client("gateway")
 
 
 class GatewayIndisponivelError(Exception):
@@ -111,10 +113,9 @@ class SessaoService:
                 ou está inacessível.
         """
         try:
-            with cliente_gateway_ms() as cliente:
-                resposta = cliente.get(
-                    f"/api/v1/autenticacao/usuarios/{login}/sistemas/",
-                )
+            resposta = _client.get(
+                f"/api/v1/autenticacao/usuarios/{login}/sistemas/",
+            )
         except httpx.HTTPError as exc:
             logger.warning(
                 "Falha ao consultar sistemas do usuário %s no Gateway: %s",

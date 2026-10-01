@@ -17,6 +17,12 @@ Core
 .. automodule:: apps.core.api.urls
    :members:
 
+.. automodule:: apps.core.api_clients
+   :members:
+
+.. automodule:: apps.core.http_client
+   :members:
+
 Autenticação
 ------------
 
@@ -30,12 +36,6 @@ Cache
    :members:
 
 .. automodule:: apps.cache.services
-   :members:
-
-Gateway-MS
-----------
-
-.. automodule:: apps.gateway_ms.cliente
    :members:
 
 Sessões

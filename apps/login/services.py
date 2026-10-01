@@ -7,11 +7,13 @@ from dataclasses import dataclass
 
 import httpx
 
-from apps.gateway_ms.cliente import cliente_gateway_ms
+from apps.core.api_clients import get_api_client
 from apps.sessoes.dominio import Sessao
 from apps.sessoes.services import GatewayIndisponivelError, SessaoService
 
 logger = logging.getLogger(__name__)
+
+_client = get_api_client("gateway")
 
 
 class LoginError(Exception):
@@ -111,11 +113,13 @@ class LoginService:
                 ou está inacessível.
         """
         try:
-            with cliente_gateway_ms() as cliente:
-                resposta = cliente.post(
-                    "/api/v1/autenticacao/login/",
-                    json={"login": login, "senha": senha},
-                )
+            resposta = _client.post(
+                "/api/v1/autenticacao/login/",
+                payload={
+                    "login": login,
+                    "senha": senha,
+                },
+            )
         except httpx.HTTPError as exc:
             logger.warning(
                 "Falha ao autenticar %s no Gateway: %s",

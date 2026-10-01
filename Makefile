@@ -22,7 +22,6 @@ help:
 	@echo "    make test-core          — apenas apps.core"
 	@echo "    make test-cache         — apenas apps.cache"
 	@echo "    make test-autenticacao  — apenas apps.autenticacao"
-	@echo "    make test-gateway-ms    — apenas apps.gateway_ms"
 	@echo "    make test-sessoes       — apenas apps.sessoes"
 	@echo "    make test-login         — apenas apps.login"
 	@echo ""
@@ -67,10 +66,6 @@ test-cache:
 test-autenticacao:
 	$(RUN) python -m pytest apps/autenticacao/testes/ \
 		--cov=apps.autenticacao --cov-report=term-missing -v
-
-test-gateway-ms:
-	$(RUN) python -m pytest apps/gateway_ms/testes/ \
-		--cov=apps.gateway_ms --cov-report=term-missing -v
 
 test-sessoes:
 	$(RUN) python -m pytest apps/sessoes/testes/ \

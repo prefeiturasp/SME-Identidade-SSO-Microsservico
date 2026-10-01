@@ -26,10 +26,7 @@ class HealthCheckView(APIView):
     authentication_classes: list = []
     permission_classes = [AllowAny]
 
-    def get(
-        self,
-        request: Request
-    ) -> Response:
+    def get(self, request: Request) -> Response:
         """Retorna o estado de saúde da aplicação.
 
         Args:
