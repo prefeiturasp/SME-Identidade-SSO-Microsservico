@@ -43,12 +43,15 @@ Sessões
 
 .. automodule:: apps.sessoes.dominio
    :members:
+   :no-index:
 
 .. automodule:: apps.sessoes.services
    :members:
+   :no-index:
 
 .. automodule:: apps.sessoes.logout_global
    :members:
+   :no-index:
 
 .. automodule:: apps.sessoes.api.views
    :members:
@@ -61,6 +64,7 @@ Login
 
 .. automodule:: apps.login.services
    :members:
+   :no-index:
 
 .. automodule:: apps.login.api.views
    :members:
